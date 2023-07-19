@@ -1,5 +1,6 @@
 package com.tencent.wxcloudrun.controller;
 
+import com.tencent.wxcloudrun.dto.CallRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,29 +53,9 @@ public class CounterController {
      * @return API response json
      */
     @PostMapping(value = "/api/count")
-    ApiResponse create(HttpServletRequest request) {
-        logger.info("/api/count post request, action: {}", request.toString());
-        log.info("request:{}", request);
-        log.info("request path:{}", request.getPathInfo());
-        log.info("request query string:{}", request.getQueryString());
-        log.info("request query string:{}", handleRequest(request));
+    ApiResponse create(@RequestBody CallRequest request) {
+        logger.info("receive message: {}", request.toString());
         return ApiResponse.ok();
-    }
-
-
-    private String handleRequest(HttpServletRequest request) {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader reader = request.getReader()) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // 现在sb中包含了请求的body数据，您可以进行相应的处理。
-        return "Received data: " + sb.toString();
     }
 
 }
