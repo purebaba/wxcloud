@@ -10,9 +10,7 @@ import com.tencent.wxcloudrun.service.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.List;
 
 /**
  * counter控制器
@@ -35,24 +33,22 @@ public class CounterController {
    * @return API response json
    */
   @GetMapping(value = "/api/count")
-  ApiResponse get() {
+  ApiResponse get(@RequestParam(required = false) String signature, @RequestParam(required = false) String timestamp, @RequestParam(required = false) String nonce, @RequestParam(required = false) String echostr) {
     logger.info("/api/count get request");
-    Optional<Counter> counter = counterService.getCounter(1);
-    Integer count = 0;
-    if (counter.isPresent()) {
-      count = counter.get().getCount();
-    }
-
-
-    return ApiResponse.ok(count);
-  }
-
-  @GetMapping("/api/wx-data")
-  public void getWxData(@RequestParam(required = false) String signature, @RequestParam(required = false) String timestamp, @RequestParam(required = false) String nonce, @RequestParam(required = false) String echostr) {
     log.info("signature:{}", signature);
     log.info("timestamp:{}", timestamp);
     log.info("nonce:{}", nonce);
     log.info("echostr:{}", echostr);
+    return ApiResponse.ok();
+  }
+
+  @GetMapping("/api/wx-data")
+  public ApiResponse getWxData(@RequestParam(required = false) String signature, @RequestParam(required = false) String timestamp, @RequestParam(required = false) String nonce, @RequestParam(required = false) String echostr) {
+    log.info("signature:{}", signature);
+    log.info("timestamp:{}", timestamp);
+    log.info("nonce:{}", nonce);
+    log.info("echostr:{}", echostr);
+    return ApiResponse.ok();
   }
 
 
