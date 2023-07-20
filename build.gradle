@@ -16,6 +16,7 @@ java {
 
 repositories {
     maven { url 'https://maven.ezbim.cn:8086/nexus/content/groups/public/' }
+    maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
     mavenCentral()
 }
 
