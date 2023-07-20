@@ -5,16 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.tencent.wxcloudrun.config.ApiResponse;
-import com.tencent.wxcloudrun.dto.CounterRequest;
-import com.tencent.wxcloudrun.model.Counter;
-import com.tencent.wxcloudrun.service.CounterService;
+import com.tencent.wxcloudrun.service.SceneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.util.Optional;
 
 /**
  * counter控制器
@@ -23,11 +18,11 @@ import java.util.Optional;
 @Slf4j
 public class CounterController {
 
-    final CounterService counterService;
+    final SceneService sceneService;
     final Logger logger;
 
-    public CounterController(@Autowired CounterService counterService) {
-        this.counterService = counterService;
+    public CounterController(@Autowired SceneService sceneService) {
+        this.sceneService = sceneService;
         this.logger = LoggerFactory.getLogger(CounterController.class);
     }
 
