@@ -1,3 +1,9 @@
+buildscript {
+    repositories {
+        maven { url 'https://mirrors.tencent.com/nexus/repository/maven-public/' }
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.6'
