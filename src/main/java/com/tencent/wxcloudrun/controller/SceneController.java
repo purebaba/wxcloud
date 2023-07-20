@@ -3,6 +3,8 @@ package com.tencent.wxcloudrun.controller;
 import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.dto.CallRequest;
 import com.tencent.wxcloudrun.dto.SceneCreateRequest;
+import com.tencent.wxcloudrun.dto.SceneResponse;
+import com.tencent.wxcloudrun.model.Scene;
 import com.tencent.wxcloudrun.service.SceneService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -34,9 +36,13 @@ public class SceneController {
      * @return API response json
      */
     @PostMapping(value = "/api/scenes")
-    ApiResponse create(@RequestBody SceneCreateRequest request) {
+    SceneResponse create(@RequestBody SceneCreateRequest request) {
         logger.info("receive message: {}", request.toString());
-        return ApiResponse.ok();
+        Scene scene = new Scene();
+        scene.setId("");
+        sceneService.save(scene);
+        SceneResponse response = new SceneResponse();
+        return response;
     }
 
 }
