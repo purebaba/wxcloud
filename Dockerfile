@@ -10,7 +10,7 @@ COPY ./ /app/
 
 # 执行代码编译命令
 # 自定义settings.xml, 选用国内镜像源以提高下载速度
-RUN ./gradlew clean bootJar
+RUN gradle clean bootJar --debug
 
 # 选择运行时基础镜像
 FROM amazoncorretto:17-alpine3.13-jdk
