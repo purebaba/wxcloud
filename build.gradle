@@ -42,7 +42,7 @@ dependencies {
     implementation 'org.mongodb:bson'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    runtimeOnly('com.h2database:h2')
+    runtimeOnly('com.h2database:h2')
     runtimeOnly('mysql:mysql-connector-java:8.0.28')
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
