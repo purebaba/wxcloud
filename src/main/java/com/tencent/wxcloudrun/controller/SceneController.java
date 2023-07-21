@@ -1,16 +1,20 @@
 package com.tencent.wxcloudrun.controller;
 
-import com.tencent.wxcloudrun.config.ApiResponse;
-import com.tencent.wxcloudrun.dto.CallRequest;
 import com.tencent.wxcloudrun.dto.SceneCreateRequest;
 import com.tencent.wxcloudrun.dto.SceneResponse;
 import com.tencent.wxcloudrun.model.Scene;
 import com.tencent.wxcloudrun.service.SceneService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import net.ezbim.shared.lang.util.IdUtils;
+import net.ezbim.shared.wxpush.api.WxQrCodeApi;
+import net.ezbim.shared.wxpush.bean.ActionInfoDTO;
+import net.ezbim.shared.wxpush.bean.ActionNameEnum;
+import net.ezbim.shared.wxpush.bean.SceneDTO;
+import net.ezbim.shared.wxpush.bean.WxQrCodeCreateRequest;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,15 +23,12 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @Slf4j
+@RequiredArgsConstructor
 public class SceneController {
 
     final SceneService sceneService;
-    final Logger logger;
+    final WxQrCodeApi wxQrCodeApi;
 
-    public SceneController(@Autowired SceneService sceneService) {
-        this.sceneService = sceneService;
-        this.logger = LoggerFactory.getLogger(SceneController.class);
-    }
 
     /**
      * 创建一个二维码
@@ -37,12 +38,33 @@ public class SceneController {
      */
     @PostMapping(value = "/api/scenes")
     SceneResponse create(@RequestBody SceneCreateRequest request) {
-        logger.info("receive message: {}", request.toString());
+        log.info("receive message: {}", request.toString());
+        String sceneId = IdUtils.createObjectId();
         Scene scene = new Scene();
-        scene.setId("");
+        scene.setId(sceneId);
+        scene.setServerId(request.getServerId());
+        scene.setUserId(request.getUserId());
+        var qrCode = wxQrCodeApi.createQrCode(genQrCodeRes(scene));
+        scene.setUrl(qrCode.getUrl());
         sceneService.save(scene);
         SceneResponse response = new SceneResponse();
+        response.setUrl(scene.getUrl());
+        response.setUserId(scene.getUserId());
+        response.setServerId(scene.getServerId());
         return response;
+    }
+
+
+    private WxQrCodeCreateRequest genQrCodeRes(Scene scene) {
+        WxQrCodeCreateRequest request = new WxQrCodeCreateRequest();
+        request.setActionName(ActionNameEnum.QR_STR_SCENE);
+        ActionInfoDTO actionInfoDTO = new ActionInfoDTO();
+        SceneDTO sceneDTO = new SceneDTO();
+        sceneDTO.setSceneStr(scene.getId());
+        actionInfoDTO.setScene(sceneDTO);
+        request.setActionInfo(actionInfoDTO);
+        request.setExpireSeconds(8000);
+        return request;
     }
 
 }
