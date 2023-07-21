@@ -13,6 +13,5 @@ spring:
     password: ${MySQL_PASSWORD}
 net:
   ezbim:
-    shared:
-      wxpush:
-        serverUrl: http://api.weixin.qq.com
+    wxpush:
+      serverUrl: http://api.weixin.qq.com
