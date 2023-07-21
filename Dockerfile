@@ -22,7 +22,7 @@ RUN apk add tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && ech
 #    && rm -f /var/cache/apk/*
 
 # 使用 HTTPS 协议访问容器云调用证书安装
-RUN #apk add ca-certificates
+# RUN apk add ca-certificates
 
 # 指定运行时的工作目录
 WORKDIR /app
