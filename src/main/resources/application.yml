@@ -15,3 +15,6 @@ net:
   ezbim:
     wxpush:
       serverUrl: http://api.weixin.qq.com
+logging:
+  file:
+    path: /var/log/wxcloud.log
