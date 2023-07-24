@@ -44,8 +44,9 @@ public class SceneController {
         scene.setId(sceneId);
         scene.setServerId(request.getServerId());
         scene.setUserId(request.getUserId());
-        var qrCode = wxQrCodeApi.createQrCode(genQrCodeRes(scene));
-        log.info(qrCode.toString());
+        var qrCodeStr = wxQrCodeApi.createQrCodeStrResponse(genQrCodeRes(scene));
+        log.info(qrCodeStr.toString());
+        var qrCode = objectMapper.readValue(qrCodeStr, WxQrCodeResponse.class);
         scene.setUrl(qrCode.getUrl());
         sceneService.save(scene);
         SceneResponse response = new SceneResponse();
