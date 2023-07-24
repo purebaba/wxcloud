@@ -1,5 +1,7 @@
 package com.tencent.wxcloudrun.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencent.wxcloudrun.dto.SceneCreateRequest;
 import com.tencent.wxcloudrun.dto.SceneResponse;
 import com.tencent.wxcloudrun.model.Scene;
@@ -8,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.ezbim.shared.lang.util.IdUtils;
 import net.ezbim.shared.wxpush.api.WxQrCodeApi;
-import net.ezbim.shared.wxpush.bean.ActionInfoDTO;
-import net.ezbim.shared.wxpush.bean.ActionNameEnum;
-import net.ezbim.shared.wxpush.bean.SceneDTO;
-import net.ezbim.shared.wxpush.bean.WxQrCodeCreateRequest;
+import net.ezbim.shared.wxpush.bean.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +27,7 @@ public class SceneController {
 
     final SceneService sceneService;
     final WxQrCodeApi wxQrCodeApi;
+    final ObjectMapper objectMapper;
 
 
     /**
@@ -37,16 +37,17 @@ public class SceneController {
      * @return API response json
      */
     @PostMapping(value = "/api/scenes")
-    SceneResponse create(@RequestBody SceneCreateRequest request) {
+    SceneResponse create(@RequestBody SceneCreateRequest request) throws JsonProcessingException {
         log.info("receive message: {}", request.toString());
         String sceneId = IdUtils.createObjectId();
         Scene scene = new Scene();
         scene.setId(sceneId);
         scene.setServerId(request.getServerId());
         scene.setUserId(request.getUserId());
-        var qrCode = wxQrCodeApi.createQrCodeStrResponse(genQrCodeRes(scene));
-        log.info(qrCode);
-//        scene.setUrl(qrCode.getUrl());
+        var qrCodeStr = wxQrCodeApi.createQrCodeStrResponse(genQrCodeRes(scene));
+        var qrCode = objectMapper.readValue(qrCodeStr, WxQrCodeResponse.class);
+        log.info(qrCode.toString());
+        scene.setUrl(qrCode.getUrl());
         sceneService.save(scene);
         SceneResponse response = new SceneResponse();
         response.setUrl(scene.getUrl());
