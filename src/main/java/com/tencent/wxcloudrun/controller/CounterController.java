@@ -1,21 +1,17 @@
 package com.tencent.wxcloudrun.controller;
 
+import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.dto.CallRequest;
 import com.tencent.wxcloudrun.model.BindUserInfo;
 import com.tencent.wxcloudrun.model.Scene;
 import com.tencent.wxcloudrun.service.BindUserInfoService;
+import com.tencent.wxcloudrun.service.SceneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.ezbim.shared.lang.util.IdUtils;
 import net.ezbim.shared.wxpush.api.WxMessageApi;
-import net.ezbim.shared.wxpush.api.WxQrCodeApi;
 import net.ezbim.shared.wxpush.bean.TextDTO;
 import net.ezbim.shared.wxpush.bean.WxMessageCreateRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.tencent.wxcloudrun.config.ApiResponse;
-import com.tencent.wxcloudrun.service.SceneService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +27,6 @@ public class CounterController {
     final SceneService sceneService;
     final BindUserInfoService bindUserInfoService;
     final WxMessageApi wxMessageApi;
-    final Logger logger;
 
 
     @GetMapping({"/api/wx-data", "/api/count"})
@@ -56,7 +51,7 @@ public class CounterController {
      */
     @PostMapping(value = "/api/count")
     ApiResponse create(@RequestBody CallRequest request) {
-        logger.info("receive message: {}", request.toString());
+        log.info("receive message: {}", request.toString());
         var msgType = request.getMsgType();
         switch (msgType) {
             case "event":
