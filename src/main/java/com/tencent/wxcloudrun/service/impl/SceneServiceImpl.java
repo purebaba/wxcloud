@@ -16,4 +16,9 @@ public class SceneServiceImpl implements SceneService {
     public void save(Scene scene) {
         sceneDao.save(scene);
     }
+
+    @Override
+    public Scene findById(String id) {
+        return sceneDao.findById(id).orElse(null);
+    }
 }

@@ -5,4 +5,6 @@ import com.tencent.wxcloudrun.model.Scene;
 
 public interface SceneService {
   void save(Scene scene);
+
+  Scene findById(String id);
 }

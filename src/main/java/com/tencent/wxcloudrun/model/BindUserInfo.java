@@ -18,6 +18,7 @@ public class BindUserInfo {
 
     @Id
     private String id;
+    private String serverId;
     private String userId;
     private String openId;
 }
