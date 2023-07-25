@@ -2,6 +2,7 @@ package com.tencent.wxcloudrun.controller;
 
 import com.tencent.wxcloudrun.config.ApiResponse;
 import com.tencent.wxcloudrun.dto.CallRequest;
+import com.tencent.wxcloudrun.dto.MessageCreateRequest;
 import com.tencent.wxcloudrun.model.BindUserInfo;
 import com.tencent.wxcloudrun.model.Scene;
 import com.tencent.wxcloudrun.service.BindUserInfoService;
@@ -15,6 +16,8 @@ import net.ezbim.shared.wxpush.bean.WxMessageCreateRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static java.util.Objects.isNull;
 
 /**
  * counter控制器
@@ -41,6 +44,23 @@ public class CounterController {
         log.info("echostr:{}", echostr);
         return ApiResponse.ok();
     }
+
+    @PostMapping({"/api/wx-message"})
+    public ApiResponse postWxMessage(@RequestBody MessageCreateRequest messageCreateRequest) {
+        var userId = messageCreateRequest.getUserId();
+        var serverId = messageCreateRequest.getServerId();
+        var bindInfo = bindUserInfoService.findBindInfo(userId, serverId);
+        if (isNull(bindInfo) || isNull(bindInfo.getOpenId())) {
+            return ApiResponse.error("未绑定");
+        }
+        WxMessageCreateRequest request = new WxMessageCreateRequest();
+        request.setMsgType(messageCreateRequest.getMsgType());
+        request.setText(messageCreateRequest.getText());
+        request.setToUser(bindInfo.getOpenId());
+        wxMessageApi.sendMessage(request);
+        return ApiResponse.ok();
+    }
+
 
 
     /**
@@ -125,7 +145,7 @@ public class CounterController {
         textDto.setContent(content);
         request.setText(textDto);
         request.setToUser(openId);
-        wxMessageApi.createQrCode(request);
+        wxMessageApi.sendMessage(request);
     }
 
 }
